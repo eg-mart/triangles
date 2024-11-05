@@ -44,4 +44,11 @@ TEST(TriangleIntersect, Classic) {
     triangle_t t2 = triangle_t(vector3_t(0, 0, 1), 
                                vector3_t(1, 1, 1),
                                vector3_t(1, 1, -2));
+
+    triangle_t t3 = triangle_t(vector3_t(0, 0, 1), 
+                               vector3_t(1, 1, 1),
+                               vector3_t(1, 1, 0));
+
+    EXPECT_TRUE(t1.is_intersecting(t2));
+    EXPECT_FALSE(t1.is_intersecting(t3));
 }
