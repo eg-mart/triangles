@@ -38,6 +38,7 @@ add_executable(
   tests/plane_test.cpp
   tests/segment_test.cpp
   tests/intersections_test.cpp
+  tests/triangle_test.cpp
 )
 
 target_link_libraries(tests_bin geometry)
