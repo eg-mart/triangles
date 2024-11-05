@@ -13,5 +13,8 @@ public:
     bool is_point_on_triangle(const vector3_t& point) const;
 
     vector3_t a, b, c;
+
+private:
+    bool intersect_lines_with_plane_(const triangle_t& other) const;
 };
 }
