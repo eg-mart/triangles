@@ -9,7 +9,7 @@ TEST(PointOnTriangle, Trivial) {
     triangle_t t = triangle_t(vector3_t(0, 0, 0), vector3_t(1, 0, 0),
                                   vector3_t(0, 1, 0)); 
     vector3_t zero = vector3_t(0, 0, 0);
-    vector3_t on_triangle = vector3_t(0.5, 0.5, 0);
+    vector3_t on_triangle = vector3_t(0.25, 0.25, 0);
     vector3_t outside_triangle1 = vector3_t(1, 1, 0);
     vector3_t outside_triangle2 = vector3_t(0, 0, 1);
 
