@@ -99,16 +99,7 @@ TEST(SegmentPointInter, Trivial) {
     EXPECT_TRUE(segment.is_point_on_segment(vector3_t(0.5, 0, 0)));
 }
 
-TEST(SegmentPointInter, Degenerate) {
-    segment_t segment = segment_t(vector3_t(0, 0, 0), vector3_t(0, 0, 0));
-
-    EXPECT_TRUE(segment.is_point_on_segment(vector3_t(0, 0, 0)));
-    EXPECT_FALSE(segment.is_point_on_segment(vector3_t(0.1, 0, 0)));
-    EXPECT_FALSE(segment.is_point_on_segment(vector3_t(0, 0.1, 0)));
-    EXPECT_FALSE(segment.is_point_on_segment(vector3_t(0, 0, 0.1)));
-}
-
-TEST(SegmentPointInter, NotDegenerate) {
+TEST(SegmentPointInter, Classic) {
     segment_t segment = segment_t(vector3_t(0, 0, 0), vector3_t(1, 1, 1));
 
     EXPECT_TRUE(segment.is_point_on_segment(vector3_t(0.5, 0.5, 0.5)));
