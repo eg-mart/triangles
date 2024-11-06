@@ -51,10 +51,10 @@ namespace geometry {
         vector3_t pc = point - c;
 
         // if the point inside triangle
-        if (is_equal_double(pa.cross(pb).mod() + 
-                            pa.cross(pc).mod() + 
-                            pb.cross(pc).mod(),  
-                            (a - b).cross(a - c).mod())) {
+        if (eq_double(pa.cross(pb).mod() + 
+                      pa.cross(pc).mod() + 
+                      pb.cross(pc).mod(),  
+                      (a - b).cross(a - c).mod())) {
             return true;
         }
         return false;

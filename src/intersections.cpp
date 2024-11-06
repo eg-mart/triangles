@@ -17,8 +17,8 @@ segment_plane_intersection_t segment_plane_intersect(
 
     // If n and a are perpendicular, then either plane and segment are parallel
     // or segment lies in the plane
-    if (is_equal_double(plane.normal.dot(a), 0)) {
-        if (is_equal_double(plane.normal.dot(b) + d, 0))
+    if (eq_double(plane.normal.dot(a), 0)) {
+        if (eq_double(plane.normal.dot(b) + d, 0))
             return segment;
         return std::monostate();
     }
