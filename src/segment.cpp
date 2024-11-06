@@ -83,7 +83,10 @@ bool segment_t::is_parallel(const segment_t& other) const
 bool segment_t::is_point_on_segment(const vector3_t& point) const
 {
     vector3_t a = end - begin;
-    return a.is_collinear(point - begin);
+    double point_param = point.dot(a) / a.mod();
+    return a.is_collinear(point - begin) &&
+           gt_double(point_param, 0) &&
+           lt_double(point_param, 1);
 }
 
 bool segment_t::operator==(const segment_t& rhs) const
