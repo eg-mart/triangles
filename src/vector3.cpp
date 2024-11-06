@@ -13,7 +13,7 @@ bool vector3_t::operator==(const vector3_t& rhs) const
 {
     bool equal = true;
     for (size_t i = 0; i < 3; i++)
-        equal &= is_equal_double(rhs.x[i], x[i]);
+        equal &= eq_double(rhs.x[i], x[i]);
     return equal;
 }
 
@@ -66,7 +66,7 @@ double vector3_t::mod() const
 
 void vector3_t::normalize()
 {
-    if (is_equal_double(mod(), 0))
+    if (eq_double(mod(), 0))
         return;
     double coeff = 1 / mod();
     for (size_t i = 0; i < 3; i++)
@@ -75,7 +75,7 @@ void vector3_t::normalize()
 
 bool vector3_t::is_collinear(const vector3_t& other) const
 {
-    return is_equal_double(cross(other).mod(), 0);
+    return eq_double(cross(other).mod(), 0);
 }
 
 vector3_t operator-(vector3_t lhs, const vector3_t& rhs)

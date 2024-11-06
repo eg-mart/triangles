@@ -41,25 +41,25 @@ TEST_F(Vector3Test, Addition) {
 }
 
 TEST_F(Vector3Test, Module) {
-    EXPECT_TRUE(is_equal_double(ones_.mod(), sqrt(3)));
-    EXPECT_TRUE(is_equal_double(zeroes_.mod(), 0));
-    EXPECT_TRUE(is_equal_double(x_.mod(), 1));
+    EXPECT_TRUE(eq_double(ones_.mod(), sqrt(3)));
+    EXPECT_TRUE(eq_double(zeroes_.mod(), 0));
+    EXPECT_TRUE(eq_double(x_.mod(), 1));
 
-    EXPECT_TRUE(is_equal_double(v1_.mod(), sqrt(14)));
-    EXPECT_TRUE(is_equal_double(v3_.mod(),
+    EXPECT_TRUE(eq_double(v1_.mod(), sqrt(14)));
+    EXPECT_TRUE(eq_double(v3_.mod(),
                                 sqrt(6.5 * 6.5 + 7.1 * 7.1 + 0.1 * 0.1)));
 }
 
 TEST_F(Vector3Test, Dot) {
-    EXPECT_TRUE(is_equal_double(x_.dot(y_), 0));
-    EXPECT_TRUE(is_equal_double(zeroes_.dot(v1_), 0));
-    EXPECT_TRUE(is_equal_double(v2_.dot(v4_), v4_.dot(v2_)));
+    EXPECT_TRUE(eq_double(x_.dot(y_), 0));
+    EXPECT_TRUE(eq_double(zeroes_.dot(v1_), 0));
+    EXPECT_TRUE(eq_double(v2_.dot(v4_), v4_.dot(v2_)));
 
-    EXPECT_TRUE(is_equal_double(v3_.dot(x_), 6.5));
-    EXPECT_TRUE(is_equal_double(v1_.dot(v2_), 19));
+    EXPECT_TRUE(eq_double(v3_.dot(x_), 6.5));
+    EXPECT_TRUE(eq_double(v1_.dot(v2_), 19));
 
-    EXPECT_TRUE(is_equal_double(sqrt(v1_.dot(v1_)), v1_.mod()));
-    EXPECT_TRUE(is_equal_double(sqrt(v3_.dot(v3_)), v3_.mod()));
+    EXPECT_TRUE(eq_double(sqrt(v1_.dot(v1_)), v1_.mod()));
+    EXPECT_TRUE(eq_double(sqrt(v3_.dot(v3_)), v3_.mod()));
 }
 
 TEST_F(Vector3Test, Cross) {
@@ -78,11 +78,11 @@ TEST_F(Vector3Test, Normalize) {
     EXPECT_EQ(old_x_, x_);
 
     v1_.normalize();
-    EXPECT_TRUE(is_equal_double(v1_.mod(), 1));
+    EXPECT_TRUE(eq_double(v1_.mod(), 1));
 
     v3_.normalize();
-    EXPECT_TRUE(is_equal_double(v3_.mod(), 1));
+    EXPECT_TRUE(eq_double(v3_.mod(), 1));
 
     zeroes_.normalize();
-    EXPECT_TRUE(is_equal_double(zeroes_.mod(), 0));
+    EXPECT_TRUE(eq_double(zeroes_.mod(), 0));
 }
