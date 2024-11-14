@@ -30,18 +30,18 @@ segment_t::intersection_t segment_t::intersect(const segment_t& rhs) const
         double begin_param2 = (rhs.begin - b1).dot(a1) / length1;
         double end_param2 = (rhs.end - b1).dot(a1) / length1;
 
-        if (begin_param2 > end_param2)
+        if (gt_double(begin_param2, end_param2))
             std::swap(begin_param2, end_param2);
 
         // If the segments lie one after another and don't intersect
-        if (std::max(begin_param1, begin_param2) >
-            std::min(end_param1, end_param2)) {
+        if (gt_double(std::max(begin_param1, begin_param2),
+                std::min(end_param1, end_param2))) {
             return std::monostate();
         }
 
         // If the end points of two segments match
-        if (is_equal_double(std::max(begin_param1, begin_param2),
-                            std::min(end_param1, end_param2))) {
+        if (eq_double(std::max(begin_param1, begin_param2),
+                std::min(end_param1, end_param2))) {
             return std::max(begin_param1, begin_param2) * a1 + b1;
         }
 
@@ -50,7 +50,7 @@ segment_t::intersection_t segment_t::intersect(const segment_t& rhs) const
         vector3_t intersect_end = std::min(end_param1, end_param2) * a1 + b1;
 
         return segment_t(intersect_begin, intersect_end); 
-    } else if (!is_equal_double(a1.cross(a2).dot(b_diff), 0) ||
+    } else if (!eq_double(a1.cross(a2).dot(b_diff), 0) ||
                a1.is_collinear(a2)) {
         // If the lines lie in different planes or are parallel
         return std::monostate();
@@ -60,14 +60,14 @@ segment_t::intersection_t segment_t::intersect(const segment_t& rhs) const
     vector3_t k = a2.cross(a1);
     
     int sign = 0;
-    if (h.dot(k) > 0)
+    if (gt_double(h.dot(k), 0))
         sign = 1;
     else
         sign = -1;
     
     double intersection_param1 = sign * h.mod() / k.mod();
 
-    if (intersection_param1 < 0 || intersection_param1 > 1)
+    if (lt_double(intersection_param1, 0) || gt_double(intersection_param1, 1))
         return std::monostate();
 
     return b1 + intersection_param1 * a1;

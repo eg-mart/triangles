@@ -1,5 +1,6 @@
 #include "triangle.h"
 #include "common.h"
+#include "intersections.h"
 
 namespace geometry {
     triangle_t::triangle_t(const vector3_t& a, const vector3_t& b, const vector3_t& c)
@@ -10,11 +11,13 @@ namespace geometry {
 
     bool triangle_t::is_intersecting(const triangle_t& other) const
     {
-        if (other.is_point_on_triangle(a) || 
-            other.is_point_on_triangle(b) || 
-            other.is_point_on_triangle(c)) {
+        // TODO: degenerate cases
+        
+        if (intersect_lines_with_plane_(other))
             return true;
-        }
+
+        if (other.intersect_lines_with_plane_(*this))
+            return true;
 
         return false; 
     }
@@ -48,12 +51,40 @@ namespace geometry {
         vector3_t pc = point - c;
 
         // if the point inside triangle
-        if (is_equal_double(pa.cross(pb).mod() + 
-                            pa.cross(pc).mod() + 
-                            pb.cross(pc).mod(),  
-                            (a - b).cross(a - c).mod())) {
+        if (eq_double(pa.cross(pb).mod() + 
+                      pa.cross(pc).mod() + 
+                      pb.cross(pc).mod(),  
+                      (a - b).cross(a - c).mod())) {
             return true;
         }
+        return false;
+    }
+
+    bool triangle_t::intersect_lines_with_plane_(const triangle_t& other) const
+    {
+        plane_t other_plane = plane_t(other.a, other.b, other.c);
+        segment_t this_lines[3] = { segment_t(a, b), segment_t(b, c), segment_t(a, c) };
+        segment_t other_lines[3] = { segment_t(other.a, other.b),
+                                     segment_t(other.b, other.c),
+                                     segment_t(other.a, other.c) };
+        
+        for (size_t i = 0; i < 3; i++) {
+            auto intersection = segment_plane_intersect(this_lines[i], other_plane);
+            
+            if (std::holds_alternative<vector3_t>(intersection))
+                if (other.is_point_on_triangle(std::get<vector3_t>(intersection)))
+                    return true;
+
+            if (std::holds_alternative<segment_t>(intersection)) {
+                for (size_t i = 0; i < 3; i++) {
+                    auto line_intersection = other_lines[i].intersect(
+                        std::get<segment_t>(intersection));
+                    if (!std::holds_alternative<std::monostate>(line_intersection))
+                        return true;
+                }
+            }
+        }
+
         return false;
     }
 }
