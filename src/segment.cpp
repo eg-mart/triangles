@@ -55,19 +55,49 @@ segment_t::intersection_t segment_t::intersect(const segment_t& rhs) const
         // If the lines lie in different planes or are parallel
         return std::monostate();
     }
+
+    // if b2 is on the first line or vice virsa
+    if (a1.is_collinear(b2 - b1)) {
+        double intersection_param = (b2 - b1).dot(a1) / a1.mod() / a1.mod();
+        if (gte_double(intersection_param, 0) &&
+                lte_double(intersection_param, 1))
+            return b2;
+        return std::monostate();
+    }
+
+    if (a2.is_collinear(b1 - b2)) {
+        double intersection_param = (b1 - b2).dot(a2) / a2.mod() / a2.mod();
+        if (gte_double(intersection_param, 0) &&
+                lte_double(intersection_param, 1))
+            return b1;
+        return std::monostate();
+    }
     
-    vector3_t h = a2.cross(b_diff);
-    vector3_t k = a2.cross(a1);
+    vector3_t h1 = a2.cross(b_diff);
+    vector3_t k1 = a2.cross(a1);
     
     int sign = 0;
-    if (gt_double(h.dot(k), 0))
+    if (gt_double(h1.dot(k1), 0))
         sign = 1;
     else
         sign = -1;
     
-    double intersection_param1 = sign * h.mod() / k.mod();
+    double intersection_param1 = sign * h1.mod() / k1.mod();
 
     if (lt_double(intersection_param1, 0) || gt_double(intersection_param1, 1))
+        return std::monostate();
+
+    vector3_t h2 = a1.cross(-b_diff);
+    vector3_t k2 = a1.cross(a2);
+    
+    if (gt_double(h2.dot(k2), 0))
+        sign = 1;
+    else
+        sign = -1;
+    
+    double intersection_param2 = sign * h2.mod() / k2.mod();
+
+    if (lt_double(intersection_param2, 0) || gt_double(intersection_param2, 1))
         return std::monostate();
 
     return b1 + intersection_param1 * a1;
@@ -83,7 +113,10 @@ bool segment_t::is_parallel(const segment_t& other) const
 bool segment_t::is_point_on_segment(const vector3_t& point) const
 {
     vector3_t a = end - begin;
-    return a.is_collinear(point - begin);
+    double point_param = (point - begin).dot(a) / a.mod() / a.mod();
+    return a.is_collinear(point - begin) &&
+           gte_double(point_param, 0) &&
+           lte_double(point_param, 1);
 }
 
 bool segment_t::operator==(const segment_t& rhs) const
