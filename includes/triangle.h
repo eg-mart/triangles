@@ -12,7 +12,7 @@ public:
     bool is_intersecting(const triangle_t& other) const;
     bool is_point_on_triangle(const vector3_t& point) const;
 
-    vector3_t a, b, c;
+    vector3_t p[3];
 
 private:
     bool intersect_lines_with_plane_(const triangle_t& other) const;

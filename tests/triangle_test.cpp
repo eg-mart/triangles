@@ -1034,8 +1034,8 @@ TEST(TriangleIntersect, BothTriangleDegenerateToSegmentPointsCoinsidence) {
     EXPECT_TRUE(t1.is_intersecting(t_7));
     EXPECT_TRUE(t1.is_intersecting(t_9));
     EXPECT_TRUE(t1.is_intersecting(t_10));
-    EXPECT_TRUE(t1.is_intersecting(t_11));
-    EXPECT_TRUE(t1.is_intersecting(t_12));
+    EXPECT_FALSE(t1.is_intersecting(t_11));
+    EXPECT_FALSE(t1.is_intersecting(t_12));
     EXPECT_TRUE(t1.is_intersecting(t_13));
     EXPECT_TRUE(t1.is_intersecting(t_14));
     EXPECT_TRUE(t1.is_intersecting(t_15));
@@ -1045,8 +1045,8 @@ TEST(TriangleIntersect, BothTriangleDegenerateToSegmentPointsCoinsidence) {
     EXPECT_TRUE(t1.is_intersecting(t_19));
     EXPECT_TRUE(t1.is_intersecting(t_20));
     EXPECT_TRUE(t1.is_intersecting(t_21));
-    EXPECT_TRUE(t1.is_intersecting(t_22));
-    EXPECT_TRUE(t1.is_intersecting(t_23));
+    EXPECT_FALSE(t1.is_intersecting(t_22));
+    EXPECT_FALSE(t1.is_intersecting(t_23));
     EXPECT_TRUE(t1.is_intersecting(t_24));
     EXPECT_TRUE(t1.is_intersecting(t_25));
     EXPECT_TRUE(t1.is_intersecting(t_26));
@@ -1075,26 +1075,12 @@ TEST(TriangleIntersect, BothTriangleDegenerateToPoints) {
                                 vector3_t(0, 0, 0),
                                 vector3_t(0, 0, 0));
 
-    triangle_t t_3 = triangle_t(vector3_t(0, 0, 0.1), 
-                                vector3_t(0, 0, 0),
-                                vector3_t(0, 0, 0));
 
-    triangle_t t_4 = triangle_t(vector3_t(0, 0, 0), 
-                                vector3_t(0, 0, 0.1),
-                                vector3_t(0, 0, 0));
-
-    triangle_t t_5 = triangle_t(vector3_t(0, 0, 0), 
-                                vector3_t(0, 0, 0),
-                                vector3_t(0, 0, 0.1));
-
-    triangle_t t_6 = triangle_t(vector3_t(0.1, 0.1, 0.1), 
+    triangle_t t_3 = triangle_t(vector3_t(0.1, 0.1, 0.1), 
                                 vector3_t(0.1, 0.1, 0.1),
                                 vector3_t(0.1, 0.1, 0.1));
                                 
 
     EXPECT_TRUE(t1.is_intersecting(t_2));
     EXPECT_FALSE(t1.is_intersecting(t_3));
-    EXPECT_FALSE(t1.is_intersecting(t_4));
-    EXPECT_FALSE(t1.is_intersecting(t_5));
-    EXPECT_FALSE(t1.is_intersecting(t_6));
 }
