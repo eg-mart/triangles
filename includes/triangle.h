@@ -1,3 +1,5 @@
+#pragma once
+
 #include <variant>
 #include "vector3.h"
 #include "segment.h"

@@ -12,6 +12,7 @@ set(
     src/plane.cpp
     src/segment.cpp
     src/intersections.cpp
+    src/octo_tree.cpp
 )
 
 add_library(geometry STATIC ${GEOMETRY_FILES})
