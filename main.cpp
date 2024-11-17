@@ -22,11 +22,15 @@ int main()
     
     std::cout << octo.a << octo.b << octo.c << "\n";
 
-    auto octo_arr = octo.divide_octo();
+    std::cout << "!!" << std::endl;
 
-    for(auto octo_it: octo_arr) {
-        std::cout << octo_it.a << octo_it.b << octo_it.c << std::endl;
-    }
+    auto octo_root = geometry::octo_tree_t(triangle_arr);
+
+    // auto octo_arr = octo.divide_octo();
+
+    // for(auto octo_it: octo_arr) {
+    //     std::cout << octo_it.a << octo_it.b << octo_it.c << std::endl;
+    // }
 
     return 0;
 }

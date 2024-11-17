@@ -77,7 +77,7 @@ namespace geometry {
     }  
 
     bool octo_t::is_triangle_in_octo(const triangle_t& triangle) {
-        for(size_t it_points; it_points < 3; ++it_points) {
+        for(size_t it_points = 0; it_points < 3; ++it_points) {
             if (gt_double(triangle.p[it_points].x[0], a.x[0]) || 
                 gt_double(triangle.p[it_points].x[1], a.x[1]) || 
                 gt_double(triangle.p[it_points].x[2], a.x[2]) || 
@@ -98,10 +98,11 @@ namespace geometry {
 
         std::list<triangle_t> smaller_triangle_arr[8] = {};
 
-        for(auto it_tr = triangle_arr.begin(), arr_end = triangle_arr.end(); it_tr != arr_end; ++it_tr) {
+
+        for(auto it_tr = triangle_arr.begin(); it_tr != triangle_arr.end(); it_tr = triangle_arr.begin()) {
             for(int it = 0; it < 8; ++it) {
                 if(smaller_octo[it].is_triangle_in_octo(*it_tr)){
-                    smaller_triangle_arr[it].splice(smaller_triangle_arr[it].begin(), triangle_arr, it_tr);
+                    smaller_triangle_arr[it].splice(smaller_triangle_arr[it].end(), triangle_arr, it_tr);
                     break;
                 }
             }
@@ -118,13 +119,8 @@ namespace geometry {
 
     node_t::~node_t() {
         for(int it = 0; it < 8; ++it) {
-            if (smaller_nodes[it] != nullptr) {
-                
-            } else {
-                
-            }
+            delete smaller_nodes[it];
         }
-
     }
 
     octo_tree_t::octo_tree_t(std::list<triangle_t>& triangle_arr) {
