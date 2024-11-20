@@ -24,8 +24,10 @@ namespace geometry {
     public:
         octo_t octo;
         std::list<triangle_t> triangles_arr;
+        std::list<triangle_t> child_triangles_arr;
         node_t* smaller_nodes[8] = {};
 
+        std::list<int> intersect_in_node(std::list<int>& number_array);
 
         node_t(std::list<triangle_t>& triangle_arr);
         ~node_t();
@@ -35,9 +37,12 @@ namespace geometry {
     {
     public:
         node_t *root = nullptr;
+        std::list<int> intersect_numbers = {};
 
         octo_tree_t(std::list<triangle_t>& triangle_arr);
         ~octo_tree_t();
+
+        void intersect_octo_tree();
     };
     
     

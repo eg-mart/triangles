@@ -22,15 +22,17 @@ int main()
     
     std::cout << octo.a << octo.b << octo.c << "\n";
 
-    std::cout << "!!" << std::endl;
+    // std::cout << "!!";
+    // std::cout << std::endl;
 
     auto octo_root = geometry::octo_tree_t(triangle_arr);
 
-    // auto octo_arr = octo.divide_octo();
+    octo_root.intersect_octo_tree();
 
-    // for(auto octo_it: octo_arr) {
-    //     std::cout << octo_it.a << octo_it.b << octo_it.c << std::endl;
-    // }
+    for (auto it : octo_root.intersect_numbers) {
+        std::cout << it;
+    }
 
+    std::cout << std::endl;
     return 0;
 }

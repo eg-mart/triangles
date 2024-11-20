@@ -77,7 +77,7 @@ namespace geometry {
     }  
 
     bool octo_t::is_triangle_in_octo(const triangle_t& triangle) {
-        for(size_t it_points = 0; it_points < 3; ++it_points) {
+        for (size_t it_points = 0; it_points < 3; ++it_points) {
             if (gt_double(triangle.p[it_points].x[0], a.x[0]) || 
                 gt_double(triangle.p[it_points].x[1], a.x[1]) || 
                 gt_double(triangle.p[it_points].x[2], a.x[2]) || 
@@ -99,16 +99,17 @@ namespace geometry {
         std::list<triangle_t> smaller_triangle_arr[8] = {};
 
 
-        for(auto it_tr = triangle_arr.begin(); it_tr != triangle_arr.end(); it_tr = triangle_arr.begin()) {
-            for(int it = 0; it < 8; ++it) {
-                if(smaller_octo[it].is_triangle_in_octo(*it_tr)){
+        for (auto it_tr = triangle_arr.begin(); it_tr != triangle_arr.end(); ++it_tr) {
+            for (int it = 0; it < 8; ++it) {
+                if (smaller_octo[it].is_triangle_in_octo(*it_tr)){
+                    this->child_triangles_arr.emplace_back(*it_tr);
                     smaller_triangle_arr[it].splice(smaller_triangle_arr[it].end(), triangle_arr, it_tr);
                     break;
                 }
             }
         }
 
-        for(int it = 0; it < 8; ++it) {
+        for (int it = 0; it < 8; ++it) {
             if (smaller_triangle_arr[it].size() > 2) {
                 smaller_nodes[it] = new node_t(smaller_triangle_arr[it]);
             } else {
@@ -117,8 +118,49 @@ namespace geometry {
         }
     }
 
+    std::list<int> node_t::intersect_in_node(std::list<int>& number_array) {
+        auto triangles_in_node = this->triangles_arr;
+
+        std::list<int> results = {};
+
+        int i = 0;
+        for (auto triangle_1 : triangles_in_node)
+        {
+            ++i;
+            int j = 0;
+            for (auto triangle_2 : triangles_in_node)
+            {
+                ++j;
+                if (i != j && triangle_1.is_intersecting(triangle_2))
+                {
+                    // std::cout << i << " is intersecting with " << j << "\n";
+                    number_array.push_back(i);
+                    results.emplace_back(i);
+                }
+            }
+            for (auto triangle_3 : this->child_triangles_arr)
+            {
+                ++j;
+                if (i != j && triangle_1.is_intersecting(triangle_3))
+                {
+                    // std::cout << i << " is intersecting with " << j << "\n";
+                    number_array.push_back(i);
+                    results.emplace_back(i);
+                }
+            }
+        }
+
+        for (int i = 0; i < 8; ++i) {
+            if (this->smaller_nodes[i] != nullptr) {
+                this->smaller_nodes[i]->intersect_in_node(number_array);
+            }
+        }
+        
+        return results;
+    }
+
     node_t::~node_t() {
-        for(int it = 0; it < 8; ++it) {
+        for (int it = 0; it < 8; ++it) {
             delete smaller_nodes[it];
         }
     }
@@ -129,5 +171,16 @@ namespace geometry {
 
     octo_tree_t::~octo_tree_t() {
         delete root;
+    }
+
+    void octo_tree_t::intersect_octo_tree() {
+
+        this->root->intersect_in_node(this->intersect_numbers);
+
+        for (int i = 0; i < 8; ++i) {
+            if (this->root->smaller_nodes[i] != nullptr) {
+                this->root->smaller_nodes[i]->intersect_in_node(this->intersect_numbers);
+            }
+        }
     }
 }
