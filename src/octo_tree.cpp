@@ -7,7 +7,7 @@
 
 
 namespace geometry {
-    octo_t::octo_t (std::list<triangle_t>& triangle_arr) {
+    octo_t::octo_t (triangle_in_node_t& triangle_arr) {
         double inf = std::numeric_limits<double>::infinity();
         
         std::pair<double, double> extr[3] = {{-inf, inf}, {-inf, inf}, {-inf, inf}}; 
@@ -15,11 +15,11 @@ namespace geometry {
         for (auto triangle: triangle_arr) {
             for (size_t it_axes = 0; it_axes < 3; ++it_axes) {
                 for (size_t it_points = 0; it_points < 3; ++it_points) {
-                    if (gt_double(triangle.p[it_points].x[it_axes], extr[it_axes].first)) {
-                        extr[it_axes].first = triangle.p[it_points].x[it_axes]; 
+                    if (gt_double(triangle.second.p[it_points].x[it_axes], extr[it_axes].first)) {
+                        extr[it_axes].first = triangle.second.p[it_points].x[it_axes]; 
                     }
-                    if (lt_double(triangle.p[it_points].x[it_axes], extr[it_axes].second)) {
-                        extr[it_axes].second = triangle.p[it_points].x[it_axes]; 
+                    if (lt_double(triangle.second.p[it_points].x[it_axes], extr[it_axes].second)) {
+                        extr[it_axes].second = triangle.second.p[it_points].x[it_axes]; 
                     }
                 }
             }
@@ -91,19 +91,20 @@ namespace geometry {
         return true;
     }
 
-    node_t::node_t(std::list<triangle_t>& triangle_arr) 
+    node_t::node_t(triangle_in_node_t& triangle_arr) 
     : triangles_arr(triangle_arr), octo(triangle_arr)
     {
         auto smaller_octo = this->octo.divide_octo();
 
-        std::list<triangle_t> smaller_triangle_arr[8] = {};
+        triangle_in_node_t smaller_triangle_arr[8] = {};
 
 
         for (auto it_tr = triangle_arr.begin(); it_tr != triangle_arr.end(); ++it_tr) {
             for (int it = 0; it < 8; ++it) {
-                if (smaller_octo[it].is_triangle_in_octo(*it_tr)){
-                    this->child_triangles_arr.emplace_back(*it_tr);
-                    smaller_triangle_arr[it].splice(smaller_triangle_arr[it].end(), triangle_arr, it_tr);
+                if (smaller_octo[it].is_triangle_in_octo(it_tr->second)){
+                    this->child_triangles_arr.emplace(*it_tr);
+                    // smaller_triangle_arr[it].emplace(smaller_triangle_arr[it].end(), triangle_arr, it_tr);
+                    smaller_triangle_arr[it].insert(triangle_arr.extract(it_tr));
                     break;
                 }
             }
@@ -131,21 +132,23 @@ namespace geometry {
             for (auto triangle_2 : triangles_in_node)
             {
                 ++j;
-                if (i != j && triangle_1.is_intersecting(triangle_2))
+                if (i != j && triangle_1.second.is_intersecting(triangle_2.second))
                 {
                     // std::cout << i << " is intersecting with " << j << "\n";
-                    number_array.push_back(i);
-                    results.emplace_back(i);
+                    number_array.push_back(triangle_1.first);
+                    number_array.push_back(triangle_2.first);
+                    // results.emplace_back(i);
                 }
             }
             for (auto triangle_3 : this->child_triangles_arr)
             {
                 ++j;
-                if (i != j && triangle_1.is_intersecting(triangle_3))
+                if (i != j && triangle_1.second.is_intersecting(triangle_3.second))
                 {
                     // std::cout << i << " is intersecting with " << j << "\n";
-                    number_array.push_back(i);
-                    results.emplace_back(i);
+                    number_array.push_back(triangle_1.first);
+                    number_array.push_back(triangle_3.first);
+                    // results.emplace_back(i);
                 }
             }
         }
@@ -165,7 +168,7 @@ namespace geometry {
         }
     }
 
-    octo_tree_t::octo_tree_t(std::list<triangle_t>& triangle_arr) {
+    octo_tree_t::octo_tree_t(triangle_in_node_t& triangle_arr) {
         root = new node_t(triangle_arr);
     }
 
@@ -182,5 +185,8 @@ namespace geometry {
                 this->root->smaller_nodes[i]->intersect_in_node(this->intersect_numbers);
             }
         }
+
+        this->intersect_numbers.sort();
+        this->intersect_numbers.unique();
     }
 }

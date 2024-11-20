@@ -16,14 +16,14 @@ int main()
                                    geometry::vector3_t(1, 1, 1),
                                    geometry::vector3_t(1, 1, 0));
 
-    std::list<geometry::triangle_t> triangle_arr = {t1, t2, t3};  
+    geometry::triangle_in_node_t triangle_arr = {{1, t1}, {2, t2}, {3, t3}};  
 
     auto octo = geometry::octo_t(triangle_arr);                             
     
     std::cout << octo.a << octo.b << octo.c << "\n";
 
-    // std::cout << "!!";
-    // std::cout << std::endl;
+    std::cout << "!!";
+    std::cout << std::endl;
 
     auto octo_root = geometry::octo_tree_t(triangle_arr);
 
