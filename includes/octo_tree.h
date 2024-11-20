@@ -10,26 +10,29 @@ namespace geometry {
 
     class octo_t
     {
-    public:
-        // std::vector<triangle_t> triangles_inside = {};
-    
-        octo_t(triangle_in_node_t& triangle_arr);
+    private:
+        vector3_t a, b, c;
+
         octo_t(const vector3_t& a, const vector3_t& b, const vector3_t& c);
 
+    public:
         std::vector<octo_t> divide_octo();
-        bool  is_triangle_in_octo(const triangle_t& triangle);
+        bool is_triangle_in_octo(const triangle_t& triangle);
 
-        vector3_t a, b, c;
+        octo_t(triangle_in_node_t& triangle_arr);
+        
     };
 
     class node_t 
     {
-    public:
+    private:
         octo_t octo;
         triangle_in_node_t triangles_arr;
         triangle_in_node_t child_triangles_arr;
-        node_t* smaller_nodes[8] = {};
 
+    public:
+        node_t* smaller_nodes[8] = {};
+    
         std::list<int> intersect_in_node(std::list<int>& number_array);
 
         node_t(triangle_in_node_t& triangle_arr);

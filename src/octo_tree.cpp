@@ -103,7 +103,6 @@ namespace geometry {
             for (int it = 0; it < 8; ++it) {
                 if (smaller_octo[it].is_triangle_in_octo(it_tr->second)){
                     this->child_triangles_arr.emplace(*it_tr);
-                    // smaller_triangle_arr[it].emplace(smaller_triangle_arr[it].end(), triangle_arr, it_tr);
                     smaller_triangle_arr[it].insert(triangle_arr.extract(it_tr));
                     break;
                 }
@@ -125,32 +124,33 @@ namespace geometry {
         std::list<int> results = {};
 
         int i = 0;
-        for (auto triangle_1 : triangles_in_node)
+        for (auto triangle_1 = triangles_in_node.begin(), t1_end = triangles_in_node.end(); triangle_1 != t1_end; ++triangle_1)
         {
-            ++i;
             int j = 0;
-            for (auto triangle_2 : triangles_in_node)
+            auto triangle_2 = triangle_1;
+            ++triangle_2;
+
+            for (auto t2_end = triangles_in_node.end(); triangle_2 != t2_end; ++triangle_2)
             {
-                ++j;
-                if (i != j && triangle_1.second.is_intersecting(triangle_2.second))
+                if (triangle_1->first != triangle_2->first && triangle_1->second.is_intersecting(triangle_2->second))
                 {
-                    // std::cout << i << " is intersecting with " << j << "\n";
-                    number_array.push_back(triangle_1.first);
-                    number_array.push_back(triangle_2.first);
-                    // results.emplace_back(i);
+                    // i is intersecting with j 
+                    number_array.push_back(triangle_1->first);
+                    number_array.push_back(triangle_2->first);
                 }
+                ++j;
             }
             for (auto triangle_3 : this->child_triangles_arr)
             {
-                ++j;
-                if (i != j && triangle_1.second.is_intersecting(triangle_3.second))
+                if (triangle_1->first != triangle_3.first && triangle_1->second.is_intersecting(triangle_3.second))
                 {
-                    // std::cout << i << " is intersecting with " << j << "\n";
-                    number_array.push_back(triangle_1.first);
+                    // i is intersecting with j 
+                    number_array.push_back(triangle_1->first);
                     number_array.push_back(triangle_3.first);
-                    // results.emplace_back(i);
                 }
+                ++j;
             }
+            ++i;
         }
 
         for (int i = 0; i < 8; ++i) {
@@ -187,6 +187,5 @@ namespace geometry {
         }
 
         this->intersect_numbers.sort();
-        this->intersect_numbers.unique();
     }
 }
