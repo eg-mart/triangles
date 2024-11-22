@@ -1,11 +1,14 @@
 #include <iostream>
 #include <assert.h>
+#include <chrono>
 #include "vector3.h"
 #include "octo_tree.h"
 
 int main()
 {
     size_t triangle_number = 0;
+
+    auto start_init = std::chrono::high_resolution_clock::now();
 
     std::cin >> triangle_number;
     assert(std::cin.good());
@@ -20,38 +23,63 @@ int main()
         std::cin >> ax >> ay >> az >> bx >> by >> bz >> cx >> cy >> cz;
         assert(std::cin.good());
 
-        auto t = geometry::triangle_t(geometry::vector3_t(ax, ay, az), 
-                                      geometry::vector3_t(bx, by, bz),
-                                      geometry::vector3_t(cx, cy, cz));
+        auto t = new geometry::triangle_t(geometry::vector3_t(ax, ay, az), 
+                                          geometry::vector3_t(bx, by, bz),
+                                          geometry::vector3_t(cx, cy, cz));
             
         triangles_arr.emplace(it, t);
     }
 
-    // std::list<int> answer = {};
+    auto stop_init = std::chrono::high_resolution_clock::now();
 
-    // for(auto x = triangles_arr.begin(); x != triangles_arr.end(); ++x){
-    //     auto y = x;
-    //     y++;
-    //     for(; y != triangles_arr.end(); ++y){
-    //         if(x->second.is_intersecting(y->second)){
-    //             answer.push_back(x->first);
-    //         }
-    //     }
-    // }
+    auto start_dumb = std::chrono::high_resolution_clock::now();
 
-    // // answer.unique();
-    // answer.sort();
+    std::list<int> answer = {};
 
-    // for (int it : answer) {
-    //     std::cout << it << " ";
-    // }
+    for (auto x = triangles_arr.begin(), 
+              t_end = triangles_arr.end(); x != t_end; ++x) {
+        auto y = x;
+        y++;
+        for (; y != t_end; ++y) {
+            if (x->second->is_intersecting(*y->second)) {
+                answer.push_back(x->first);
+            }
+        }
+    }
+
+    answer.sort();
+
+    for (int it : answer) {
+        std::cout << it << " ";
+    }
+
+    std::cout << "\n";
+
+    auto stop_dumb = std::chrono::high_resolution_clock::now();
+
+    auto start_octo = std::chrono::high_resolution_clock::now();
     
     auto octo_root = geometry::octo_tree_t(triangles_arr);
 
-    octo_root.intersect_octo_tree();
+    std::list<int> intersect_numbers;
+    octo_root.intersect_octo_tree(intersect_numbers);
 
-    for (auto it : octo_root.intersect_numbers) {
+    auto stop_octo = std::chrono::high_resolution_clock::now();
+
+    auto duration_init = std::chrono::duration_cast<std::chrono::milliseconds>(stop_init - start_init);
+    auto duration_dumb = std::chrono::duration_cast<std::chrono::milliseconds>(stop_dumb - start_dumb);
+    auto duration_octo = std::chrono::duration_cast<std::chrono::milliseconds>(stop_octo - start_octo);
+
+    std::cout << "Time taken by init: " << duration_init.count() << " miliseconds; \n" << std::endl;
+    std::cout << "Time taken by dumb: " << duration_dumb.count() << " miliseconds; \n" << std::endl;
+    std::cout << "Time taken by octo: " << duration_octo.count() << " miliseconds; \n" << std::endl;
+
+    for (auto it : intersect_numbers) {
         std::cout << it << " ";
+    }
+
+    for (auto it : triangles_arr) {
+        delete it.second;
     }
 
     std::cout << std::endl;

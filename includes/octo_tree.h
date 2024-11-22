@@ -6,7 +6,7 @@
 #include "triangle.h"
 
 namespace geometry {
-    using triangle_in_node_t = std::unordered_map<int, triangle_t>;
+    using triangle_in_node_t = std::unordered_map<int, triangle_t *>;
 
     class octo_t
     {
@@ -43,12 +43,11 @@ namespace geometry {
     {
     public:
         node_t *root = nullptr;
-        std::list<int> intersect_numbers = {};
 
         octo_tree_t(triangle_in_node_t& triangle_arr);
         ~octo_tree_t();
 
-        void intersect_octo_tree();
+        void intersect_octo_tree(std::list<int>& intersect_numbers);
     };
     
     
