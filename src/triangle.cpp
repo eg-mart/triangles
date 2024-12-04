@@ -25,16 +25,21 @@ namespace geometry {
         if (p[0] == p[1] && p[1] == p[2])
             return point == p[0];
 
-        std::vector<segment_t> lines;
-        for (size_t i = 0; i < 3; i++)
-            for (size_t j = i + 1; j < 3; j++)
-                if (p[i] != p[j])
-                    lines.push_back(segment_t(p[i], p[j]));
+        segment_t lines[3];
+        size_t lines_cnt = 0;
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = i + 1; j < 3; j++) {
+                if (p[i] != p[j]) {
+                    lines[lines_cnt] = segment_t(p[i], p[j]);
+                    ++lines_cnt;
+                }
+            }
+        }
 
         // if the triangle is just a line
         if (lines[0].is_parallel(lines[1])) {
-            for (auto it = lines.begin(); it != lines.end(); ++it)
-                if (it->is_point_on_segment(point))
+            for (size_t i = 0; i < lines_cnt; ++i)
+                if (lines[i].is_point_on_segment(point))
                     return true;
             return false;
         }
@@ -72,24 +77,34 @@ namespace geometry {
 
         // TODO: switch from vectors to arrays (need for speed)
 
-        std::vector<segment_t> this_lines;
-        for (size_t i = 0; i < 3; i++)
-            for (size_t j = i + 1; j < 3; j++)
-                if (p[i] != p[j])
-                    this_lines.push_back(segment_t(p[i], p[j]));
+        segment_t this_lines[3];
+        size_t this_lines_cnt = 0;
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = i + 1; j < 3; j++) {
+                if (p[i] != p[j]) {
+                    this_lines[this_lines_cnt] = segment_t(p[i], p[j]);
+                    ++this_lines_cnt;
+                }
+            }
+        }
 
-        std::vector<segment_t> other_lines;
-        for (size_t i = 0; i < 3; i++)
-            for (size_t j = i + 1; j < 3; j++)
-                if (other.p[i] != other.p[j])
-                    other_lines.push_back(segment_t(other.p[i], other.p[j]));
+        segment_t other_lines[3];
+        size_t other_lines_cnt = 0;
+        for (size_t i = 0; i < 3; i++) {
+            for (size_t j = i + 1; j < 3; j++) {
+                if (other.p[i] != other.p[j]) {
+                    other_lines[other_lines_cnt] = segment_t(other.p[i], other.p[j]);
+                    ++other_lines_cnt;
+                }
+            }
+        }
 
         // if both triangles are in fact lines, a different algorithm is needed
         if (this_lines[0].is_parallel(this_lines[1]) &&
                 other_lines[0].is_parallel(other_lines[1])) {
-            for (auto const &this_line : this_lines) {
-                for (auto const &other_line : other_lines) {
-                    auto intersection = this_line.intersect(other_line);
+            for (size_t i = 0; i < this_lines_cnt; ++i) {
+                for (size_t j = 0; j < other_lines_cnt; ++j) {
+                    auto intersection = this_lines[i].intersect(other_lines[j]);
                     if (!std::holds_alternative<std::monostate>(intersection))
                         return true;
                 }
@@ -104,16 +119,16 @@ namespace geometry {
 
         plane_t other_plane = plane_t(other.p[0], other.p[1], other.p[2]);
         
-        for (auto const &this_line : this_lines) {
-            auto intersection = segment_plane_intersect(this_line, other_plane);
+        for (size_t i = 0; i < this_lines_cnt; ++i) {
+            auto intersection = segment_plane_intersect(this_lines[i], other_plane);
             
             if (std::holds_alternative<vector3_t>(intersection))
                 if (other.is_point_on_triangle(std::get<vector3_t>(intersection)))
                     return true;
 
             if (std::holds_alternative<segment_t>(intersection)) {
-                for (auto const &other_line : other_lines) {
-                    auto line_intersection = other_line.intersect(
+                for (size_t j = 0; j < other_lines_cnt; ++j) {
+                    auto line_intersection = other_lines[j].intersect(
                         std::get<segment_t>(intersection));
                     if (!std::holds_alternative<std::monostate>(line_intersection))
                         return true;

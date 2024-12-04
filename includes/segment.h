@@ -9,6 +9,7 @@ public:
     using intersection_t = typename std::variant<std::monostate,
                                                  vector3_t, segment_t>;
 
+    segment_t();
     segment_t(const vector3_t& begin, const vector3_t& end);
 
     intersection_t intersect(const segment_t& rhs) const;

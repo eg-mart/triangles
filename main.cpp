@@ -43,6 +43,7 @@ int main()
         for (; y != t_end; ++y) {
             if (x->second->is_intersecting(*y->second)) {
                 answer.push_back(x->first);
+                answer.push_back(y->first);
             }
         }
     }

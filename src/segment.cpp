@@ -4,6 +4,11 @@
 #include "common.h"
 
 namespace geometry {
+segment_t::segment_t()
+    : begin(vector3_t())
+    , end(vector3_t(1, 1, 1))
+{}
+
 segment_t::segment_t(const vector3_t& begin, const vector3_t& end)
     : begin(begin)
     , end(end)
