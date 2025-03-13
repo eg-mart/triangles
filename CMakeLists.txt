@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(
     GEOMETRY_FILES
     src/vector3.cpp
-    src/common.cpp
     src/triangle.cpp
     src/plane.cpp
     src/segment.cpp

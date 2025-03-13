@@ -1,17 +1,20 @@
 #include <iostream>
 #include <assert.h>
 #include <chrono>
+#include <fstream>
 #include "vector3.h"
 #include "octo_tree.h"
 
 int main()
 {
+    std::ifstream input;
+    input.open("source.txt");
+
     size_t triangle_number = 0;
 
     auto start_init = std::chrono::high_resolution_clock::now();
 
-    std::cin >> triangle_number;
-    assert(std::cin.good());
+    input >> triangle_number;
 
     geometry::triangle_in_node_t triangles_arr = {};
 
@@ -20,8 +23,7 @@ int main()
                bx = 0, by = 0, bz = 0,
                cx = 0, cy = 0, cz = 0;
 
-        std::cin >> ax >> ay >> az >> bx >> by >> bz >> cx >> cy >> cz;
-        assert(std::cin.good());
+        input >> ax >> ay >> az >> bx >> by >> bz >> cx >> cy >> cz;
 
         auto t = new geometry::triangle_t(geometry::vector3_t(ax, ay, az), 
                                           geometry::vector3_t(bx, by, bz),
@@ -34,27 +36,27 @@ int main()
 
     auto start_dumb = std::chrono::high_resolution_clock::now();
 
-    std::list<int> answer = {};
+    //std::list<int> answer = {};
 
-    for (auto x = triangles_arr.begin(), 
-              t_end = triangles_arr.end(); x != t_end; ++x) {
-        auto y = x;
-        y++;
-        for (; y != t_end; ++y) {
-            if (x->second->is_intersecting(*y->second)) {
-                answer.push_back(x->first);
-                answer.push_back(y->first);
-            }
-        }
-    }
+    //for (auto x = triangles_arr.begin(), 
+              //t_end = triangles_arr.end(); x != t_end; ++x) {
+        //auto y = x;
+        //y++;
+        //for (; y != t_end; ++y) {
+            //if (x->second->is_intersecting(*y->second)) {
+                //answer.push_back(x->first);
+                //answer.push_back(y->first);
+            //}
+        //}
+    //}
 
-    answer.sort();
+    //answer.sort();
 
-    for (int it : answer) {
-        std::cout << it << " ";
-    }
+    //for (int it : answer) {
+        //std::cout << it << " ";
+    //}
 
-    std::cout << "\n";
+    //std::cout << "\n";
 
     auto stop_dumb = std::chrono::high_resolution_clock::now();
 
@@ -84,5 +86,6 @@ int main()
     }
 
     std::cout << std::endl;
+    input.close();
     return 0;
 }

@@ -10,11 +10,11 @@ namespace geometry {
 octo_t::octo_t (triangle_in_node_t& triangle_arr) {
     double inf = std::numeric_limits<double>::infinity();
 
-    // first is biggets, second is smallest
+    // first is biggest, second is smallest
     std::pair<double, double> extr[3] = {{-inf, inf}, {-inf, inf}, {-inf, inf}}; 
 
     // find extremums of triangles array
-    for (auto triangle: triangle_arr) {
+    for (auto triangle : triangle_arr) {
         for (size_t it_axes = 0; it_axes < 3; ++it_axes) {
             for (size_t it_points = 0; it_points < 3; ++it_points) {
                 auto point_coord = triangle.second->p[it_points].x[it_axes];
@@ -115,9 +115,8 @@ node_t::node_t(triangle_in_node_t& triangle_arr)
               arr_end = triangle_arr.end(); it_tr != arr_end; ++it_tr) {
         for (int it = 0; it < 8; ++it) {
             if (smaller_octo[it].is_triangle_in_octo(*it_tr->second)){
-                this->child_triangles_arr.emplace(*it_tr);
-                smaller_triangle_arr[it].insert(triangle_arr.extract(it_tr));
-                break;
+                this->child_triangles_arr.insert(*it_tr);
+                smaller_triangle_arr[it].insert(triangles_arr.extract(it_tr->first));
             }
         }
     }
@@ -208,6 +207,20 @@ octo_tree_t::octo_tree_t(triangle_in_node_t& triangle_arr) {
 octo_tree_t::~octo_tree_t() {
     delete root;
 }
+
+size_t octo_tree_t::size() {
+    return size_(root);
+}
+
+size_t octo_tree_t::size_(node_t *node) {
+    if (!node)
+        return 0;
+    size_t res = 1;
+    for (size_t i = 0; i < 7; ++i)
+        res += size_(node->smaller_nodes[i]);
+    return res;
+}
+
 
 void octo_tree_t::intersect_octo_tree(std::list<int>& intersect_numbers) {
 
