@@ -75,8 +75,6 @@ namespace geometry {
         if (other.p[0] == other.p[1] && other.p[1] == other.p[2])
             return false;
 
-        // TODO: switch from vectors to arrays (need for speed)
-
         segment_t this_lines[3];
         size_t this_lines_cnt = 0;
         for (size_t i = 0; i < 3; i++) {
