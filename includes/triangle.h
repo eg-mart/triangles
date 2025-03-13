@@ -1,3 +1,5 @@
+#pragma once
+
 #include <variant>
 #include "vector3.h"
 #include "segment.h"
@@ -13,6 +15,7 @@ public:
     bool is_point_on_triangle(const vector3_t& point) const;
 
     vector3_t p[3];
+    bool is_intersect = 0;
 
 private:
     bool intersect_lines_with_plane_(const triangle_t& other) const;
